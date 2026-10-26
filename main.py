@@ -120,21 +120,40 @@ def run_all_checks(scraper: SpotifyScraper, state_mgr: StateManager, notifier: T
     for current_data in playlists_data:
         pid = current_data["id"]
         title = current_data["title"]
+        fetch_error = current_data.get("fetch_error", False)
+
+        # Shield 1: Skip if scraper reported fetch error
+        if fetch_error:
+            logger.warning(f"[{now_str}] [{title}] Σφάλμα ανάκτησης από Spotify. Αγνοείται για αποφυγή ψευδών διαγραφών.")
+            continue
+
         saved_state = state_mgr.load_playlist_state(pid)
 
         # First run for this specific playlist
         if saved_state is None:
-            state_mgr.save_playlist_state(current_data)
-            logger.info(f"[{now_str}] Αρχικοποίηση '{title}': {len(current_data['tracks'])} τραγούδια.")
+            if len(current_data["tracks"]) > 0:
+                state_mgr.save_playlist_state(current_data)
+                logger.info(f"[{now_str}] Αρχικοποίηση '{title}': {len(current_data['tracks'])} τραγούδια.")
             continue
 
         old_tracks = saved_state.get("tracks", [])
         new_tracks = current_data["tracks"]
 
+        # Shield 2: If new_tracks is 0 but we had tracks, NEVER treat as removal (network glitch)
+        if len(new_tracks) == 0 and len(old_tracks) > 0:
+            logger.warning(f"[{now_str}] [{title}] Λήφθηκαν 0 τραγούδια (προηγουμένως: {len(old_tracks)}). Προστασία αποφυγής ψευδών διαγραφών.")
+            continue
+
         added, removed = state_mgr.diff_tracks(old_tracks, new_tracks)
+
+        # Shield 3: Mass deletion anomaly shield (no user deletes 70%+ of a playlist in 60s)
+        if len(removed) >= len(old_tracks) * 0.7 and len(old_tracks) > 3:
+            logger.warning(f"[{now_str}] [{title}] Ανιχνεύθηκε μαζική απώλεια {len(removed)}/{len(old_tracks)} τραγουδιών. Αγνοείται ως ανωμαλία δικτύου.")
+            continue
 
         if not added and not removed:
             continue
+
 
         # Notifications
         if added:

@@ -83,7 +83,6 @@ class SpotifyScraper:
                 "--disable-dev-shm-usage",
                 "--disable-gpu",
             ]
-
         )
         self._page = self._browser.new_page()
         self._page.on("request", self._on_request)
@@ -156,47 +155,74 @@ class SpotifyScraper:
                 let offset = 0;
                 let playlistName = '';
                 let author = '';
+                let hasError = false;
+                
                 while (true) {
-                    const res = await fetch('https://api-partner.spotify.com/pathfinder/v2/query', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': headers.auth,
-                            ...(headers.clientToken ? {'Client-Token': headers.clientToken} : {})
-                        },
-                        body: JSON.stringify({
-                            operationName: 'fetchPlaylist',
-                            variables: {
-                                uri: 'spotify:playlist:' + pid,
-                                offset: offset,
-                                limit: 100,
-                                enableWatchFeedEntrypoint: false,
-                                includeEpisodeContentRatingsV2: true
-                            },
-                            extensions: {
-                                persistedQuery: {
-                                    version: 1,
-                                    sha256Hash: sha256
-                                }
-                            }
-                        })
-                    });
-                    if (!res.ok) break;
-                    const data = await res.json();
+                    let res = null;
+                    let attempts = 3;
+                    while (attempts > 0) {
+                        try {
+                            res = await fetch('https://api-partner.spotify.com/pathfinder/v2/query', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': headers.auth,
+                                    ...(headers.clientToken ? {'Client-Token': headers.clientToken} : {})
+                                },
+                                body: JSON.stringify({
+                                    operationName: 'fetchPlaylist',
+                                    variables: {
+                                        uri: 'spotify:playlist:' + pid,
+                                        offset: offset,
+                                        limit: 100,
+                                        enableWatchFeedEntrypoint: false,
+                                        includeEpisodeContentRatingsV2: true
+                                    },
+                                    extensions: {
+                                        persistedQuery: {
+                                            version: 1,
+                                            sha256Hash: sha256
+                                        }
+                                    }
+                                })
+                            });
+                            if (res.ok) break;
+                        } catch (e) {}
+                        attempts--;
+                        if (attempts > 0) await new Promise(r => setTimeout(r, 1200));
+                    }
+                    
+                    if (!res || !res.ok) {
+                        hasError = true;
+                        break;
+                    }
+                    
+                    let data = null;
+                    try {
+                        data = await res.json();
+                    } catch (e) {
+                        hasError = true;
+                        break;
+                    }
+                    
                     const pl = data?.data?.playlistV2;
-                    if (!pl) break;
+                    if (!pl) {
+                        hasError = true;
+                        break;
+                    }
                     playlistName = pl.name || playlistName;
                     author = pl.ownerV2?.data?.name || author;
                     const items = pl.content?.items || [];
-                    if (items.length === 0) break;
                     allItems.push(...items);
                     if (items.length < 100) break;
                     offset += 100;
                 }
+                
                 return {
                     id: pid,
                     title: playlistName,
                     author: author,
+                    fetch_error: hasError,
                     total_tracks: allItems.length,
                     raw_items: allItems.map(it => ({
                         id: (it.itemV2?.data?.uri || '').split(':').pop(),
@@ -208,10 +234,13 @@ class SpotifyScraper:
             }
             
             const results = [];
-            for (let i = 0; i < pids.length; i += 6) {
-                const chunk = pids.slice(i, i + 6);
+            for (let i = 0; i < pids.length; i += 2) {
+                const chunk = pids.slice(i, i + 2);
                 const chunkRes = await Promise.all(chunk.map(pid => fetchSingle(pid)));
                 results.push(...chunkRes);
+                if (i + 2 < pids.length) {
+                    await new Promise(r => setTimeout(r, 200));
+                }
             }
             return results;
         }
@@ -248,6 +277,7 @@ class SpotifyScraper:
             pid = r.get("id", "")
             title = r.get("title") or f"Λίστα {pid}"
             author = r.get("author") or "Δημιουργός"
+            fetch_error = r.get("fetch_error", False)
 
             tracks = []
             for item in r.get("raw_items", []):
@@ -264,6 +294,7 @@ class SpotifyScraper:
                     "added_timestamp": ts,
                 })
 
+            # If fetch_error is true or empty tracks on a known playlist, flag it
             parsed_playlists.append({
                 "id": pid,
                 "title": title,
@@ -271,6 +302,7 @@ class SpotifyScraper:
                 "url": f"https://open.spotify.com/playlist/{pid}",
                 "total_tracks": len(tracks),
                 "tracks": tracks,
+                "fetch_error": fetch_error,
             })
 
         return parsed_playlists
