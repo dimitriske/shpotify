@@ -11965,8 +11965,8 @@
     "playlist_id": "5oBhsmiTaKaSSVa7KaJVFA",
     "playlist_title": "New",
     "playlist_author": "Freon gr",
-    "last_updated": 1793012347.6400511,
-    "total_tracks": 8,
+    "last_updated": 1793014033.3866782,
+    "total_tracks": 9,
     "tracks": [
       {
         "id": "7AB0cUXnzuSlAnyHOqmrZr",
@@ -12031,6 +12031,14 @@
         "url": "https://open.spotify.com/track/4s6W225nD6Auj9Qfayujgu",
         "added_at": "2026-10-26 12:58:48",
         "added_timestamp": 1793012328.857
+      },
+      {
+        "id": "3vKqBFEJWVtJ4rQQLt3Dbe",
+        "title": "Epiloges - Prod. By Skive",
+        "artist": "HGEMONA$, LEX, Skive",
+        "url": "https://open.spotify.com/track/3vKqBFEJWVtJ4rQQLt3Dbe",
+        "added_at": "2026-10-26 13:23:10",
+        "added_timestamp": 1793013790.623
       }
     ]
   },
@@ -15012,6 +15020,16 @@
       "url": "https://open.spotify.com/track/4s6W225nD6Auj9Qfayujgu",
       "datetime": "2026-10-26 12:58:48",
       "timestamp": 1793012328.857
+    },
+    {
+      "action": "added",
+      "playlist_id": "5oBhsmiTaKaSSVa7KaJVFA",
+      "playlist_title": "New",
+      "track_title": "Epiloges - Prod. By Skive",
+      "track_artist": "HGEMONA$, LEX, Skive",
+      "url": "https://open.spotify.com/track/3vKqBFEJWVtJ4rQQLt3Dbe",
+      "datetime": "2026-10-26 13:23:10",
+      "timestamp": 1793013790.623
     }
   ]
 }

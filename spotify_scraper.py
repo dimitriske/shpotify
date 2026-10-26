@@ -4,6 +4,7 @@ import logging
 import time
 from typing import Dict, Any, List, Optional, Tuple
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
 from playwright.sync_api import sync_playwright, Playwright, Browser, Page
 
 logger = logging.getLogger("SpotifyScraper")
@@ -29,10 +30,12 @@ class SpotifyScraper:
     Ανακτά τα πλήρη δεδομένα και ΟΛΑ τα τραγούδια (100, 150, 500+)
     οποιασδήποτε δημόσιας λίστας Spotify χωρίς API keys,
     μέσω αυτοματοποιημένης συνεδρίας Playwright και επίσημων Pathfinder queries.
+    Χρησιμοποιεί αποκλειστικό worker thread για 100% thread safety και αποφυγή asyncio loop conflicts.
     """
 
     def __init__(self, timeout: int = 30):
         self.timeout = timeout
+        self._executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="SpotifyScraperWorker")
         self._pw: Optional[Playwright] = None
         self._browser: Optional[Browser] = None
         self._page: Optional[Page] = None
@@ -60,7 +63,6 @@ class SpotifyScraper:
                 self._client_token = c
 
     def _ensure_browser(self):
-        # Refresh session if older than 1 hour or uninitialized
         now = time.time()
         if (
             self._browser is not None
@@ -75,12 +77,17 @@ class SpotifyScraper:
         self._pw = sync_playwright().start()
         self._browser = self._pw.chromium.launch(
             headless=True,
-            args=["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"]
+            args=[
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-gpu",
+            ]
+
         )
         self._page = self._browser.new_page()
         self._page.on("request", self._on_request)
 
-        # Navigate to spotify web to acquire valid authorization & client-token
         self._auth_header = None
         self._client_token = None
         try:
@@ -90,8 +97,10 @@ class SpotifyScraper:
             logger.warning(f"Προειδοποίηση κατά τη φόρτωση του Spotify: {e}")
 
         if not self._auth_header:
-            # Fallback: wait a bit more if token not yet acquired
-            self._page.wait_for_timeout(2000)
+            try:
+                self._page.wait_for_timeout(2000)
+            except Exception:
+                pass
 
         self._last_auth_time = time.time()
         logger.info(f"Συνεδρία Spotify Web έτοιμη (Auth: {bool(self._auth_header)}, Token: {bool(self._client_token)})")
@@ -119,8 +128,12 @@ class SpotifyScraper:
     def fetch_playlists_batch(self, urls_or_ids: List[str]) -> List[Dict[str, Any]]:
         """
         Ανακτά ταυτόχρονα όλες τις λίστες της λίστας urls_or_ids με πλήρη σελιδοποίηση (>100 τραγούδια).
-        Εξαιρετικά γρήγορο (~3-4 δευτερόλεπτα για 27 λίστες).
+        Εκτελείται στο αποκλειστικό worker thread για απόλυτη σταθερότητα.
         """
+        future = self._executor.submit(self._fetch_playlists_batch_worker, urls_or_ids)
+        return future.result()
+
+    def _fetch_playlists_batch_worker(self, urls_or_ids: List[str]) -> List[Dict[str, Any]]:
         self._ensure_browser()
 
         pids = []
@@ -272,4 +285,9 @@ class SpotifyScraper:
         raise RuntimeError(f"Αποτυχία ανάκτησης λίστας: {playlist_url_or_id}")
 
     def close(self):
-        self._close_browser()
+        try:
+            future = self._executor.submit(self._close_browser)
+            future.result(timeout=5)
+        except Exception:
+            pass
+        self._executor.shutdown(wait=False)
