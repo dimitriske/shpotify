@@ -8624,7 +8624,7 @@
     "playlist_id": "6LhCyfYd4eX0yOrYkjAmvw",
     "playlist_title": "Σκοτάδι ",
     "playlist_author": "Danos Alexoudis.",
-    "last_updated": 1793011733.5291228,
+    "last_updated": 1793095723.6058593,
     "total_tracks": 71,
     "tracks": [
       {
@@ -9172,14 +9172,6 @@
         "added_timestamp": 1790499325.0
       },
       {
-        "id": "2AW81zLi3HdCu1e8rm8mY7",
-        "title": "San Star Tou Cinema",
-        "artist": "Nikos Ziogalas",
-        "url": "https://open.spotify.com/track/2AW81zLi3HdCu1e8rm8mY7",
-        "added_at": "2026-10-03 09:03:33",
-        "added_timestamp": 1791007413.0
-      },
-      {
         "id": "1zPyw45t8IYux65DF88yni",
         "title": "O Achilleas Ap' To Kairo",
         "artist": "Kostas Tournas",
@@ -9194,6 +9186,14 @@
         "url": "https://open.spotify.com/track/6GK1n9KVv7ZgwwiRXaKin6",
         "added_at": "2026-10-09 18:51:00",
         "added_timestamp": 1791561060.0
+      },
+      {
+        "id": "76POKAlahgJpAjYtoXc4aK",
+        "title": "Gia Tous Anisixous",
+        "artist": "Novel 729, Sumo Beats",
+        "url": "https://open.spotify.com/track/76POKAlahgJpAjYtoXc4aK",
+        "added_at": "2026-10-27 12:03:03",
+        "added_timestamp": 1793095383.0
       }
     ]
   },
@@ -9201,8 +9201,8 @@
     "playlist_id": "4uOkb2ND8Pi5gYCe1dj02v",
     "playlist_title": "For",
     "playlist_author": "Danos Alexoudis.",
-    "last_updated": 1793011733.5291228,
-    "total_tracks": 70,
+    "last_updated": 1793052136.522401,
+    "total_tracks": 69,
     "tracks": [
       {
         "id": "2pUdD0UzMvD6koB2d4sOrP",
@@ -9715,14 +9715,6 @@
         "url": "https://open.spotify.com/track/6PCQsdYKIAqQFGg1F2PfEd",
         "added_at": "2026-04-27 10:42:07",
         "added_timestamp": 1777275727.0
-      },
-      {
-        "id": "6pHdnVVeWPLvRR4H4WF6Vf",
-        "title": "Kara Tepe",
-        "artist": "Wang, Mateos Nps",
-        "url": "https://open.spotify.com/track/6pHdnVVeWPLvRR4H4WF6Vf",
-        "added_at": "2026-05-11 13:51:28",
-        "added_timestamp": 1778496688.0
       },
       {
         "id": "3N036yXI9vKelGPc89Uv26",
@@ -11965,7 +11957,7 @@
     "playlist_id": "5oBhsmiTaKaSSVa7KaJVFA",
     "playlist_title": "New",
     "playlist_author": "Freon gr",
-    "last_updated": 1793014033.3866782,
+    "last_updated": 1793092674.757481,
     "total_tracks": 9,
     "tracks": [
       {
@@ -12025,20 +12017,20 @@
         "added_timestamp": 1793011316.084
       },
       {
-        "id": "4s6W225nD6Auj9Qfayujgu",
-        "title": "Ekato",
-        "artist": "Sadam, HGEMONA$, Mike G",
-        "url": "https://open.spotify.com/track/4s6W225nD6Auj9Qfayujgu",
-        "added_at": "2026-10-26 12:58:48",
-        "added_timestamp": 1793012328.857
+        "id": "7KmniNnz6ld88aIAMJi2Xb",
+        "title": "Once In A Lifetime",
+        "artist": "Light",
+        "url": "https://open.spotify.com/track/7KmniNnz6ld88aIAMJi2Xb",
+        "added_at": "2026-10-26 13:38:01",
+        "added_timestamp": 1793014681.227
       },
       {
-        "id": "3vKqBFEJWVtJ4rQQLt3Dbe",
-        "title": "Epiloges - Prod. By Skive",
-        "artist": "HGEMONA$, LEX, Skive",
-        "url": "https://open.spotify.com/track/3vKqBFEJWVtJ4rQQLt3Dbe",
-        "added_at": "2026-10-26 13:23:10",
-        "added_timestamp": 1793013790.623
+        "id": "05zHAkeiaKLn4Vs8bPgrqv",
+        "title": "Take Me There",
+        "artist": "DA TI",
+        "url": "https://open.spotify.com/track/05zHAkeiaKLn4Vs8bPgrqv",
+        "added_at": "2026-10-26 13:38:38",
+        "added_timestamp": 1793014718.414
       }
     ]
   },
@@ -15030,6 +15022,72 @@
       "url": "https://open.spotify.com/track/3vKqBFEJWVtJ4rQQLt3Dbe",
       "datetime": "2026-10-26 13:23:10",
       "timestamp": 1793013790.623
+    },
+    {
+      "action": "removed",
+      "playlist_id": "4uOkb2ND8Pi5gYCe1dj02v",
+      "playlist_title": "For",
+      "track_title": "Kara Tepe",
+      "track_artist": "Wang, Mateos Nps",
+      "datetime": "2026-10-27 00:02:16",
+      "timestamp": 1793052136.522401
+    },
+    {
+      "action": "added",
+      "playlist_id": "5oBhsmiTaKaSSVa7KaJVFA",
+      "playlist_title": "New",
+      "track_title": "Once In A Lifetime",
+      "track_artist": "Light",
+      "url": "https://open.spotify.com/track/7KmniNnz6ld88aIAMJi2Xb",
+      "datetime": "2026-10-26 13:38:01",
+      "timestamp": 1793014681.227
+    },
+    {
+      "action": "added",
+      "playlist_id": "5oBhsmiTaKaSSVa7KaJVFA",
+      "playlist_title": "New",
+      "track_title": "Take Me There",
+      "track_artist": "DA TI",
+      "url": "https://open.spotify.com/track/05zHAkeiaKLn4Vs8bPgrqv",
+      "datetime": "2026-10-26 13:38:38",
+      "timestamp": 1793014718.414
+    },
+    {
+      "action": "removed",
+      "playlist_id": "5oBhsmiTaKaSSVa7KaJVFA",
+      "playlist_title": "New",
+      "track_title": "Epiloges - Prod. By Skive",
+      "track_artist": "HGEMONA$, LEX, Skive",
+      "datetime": "2026-10-27 00:02:17",
+      "timestamp": 1793052137.4333003
+    },
+    {
+      "action": "removed",
+      "playlist_id": "5oBhsmiTaKaSSVa7KaJVFA",
+      "playlist_title": "New",
+      "track_title": "Ekato",
+      "track_artist": "Sadam, HGEMONA$, Mike G",
+      "datetime": "2026-10-27 11:17:54",
+      "timestamp": 1793092674.757481
+    },
+    {
+      "action": "added",
+      "playlist_id": "6LhCyfYd4eX0yOrYkjAmvw",
+      "playlist_title": "Σκοτάδι ",
+      "track_title": "Gia Tous Anisixous",
+      "track_artist": "Novel 729, Sumo Beats",
+      "url": "https://open.spotify.com/track/76POKAlahgJpAjYtoXc4aK",
+      "datetime": "2026-10-27 12:03:03",
+      "timestamp": 1793095383.0
+    },
+    {
+      "action": "removed",
+      "playlist_id": "6LhCyfYd4eX0yOrYkjAmvw",
+      "playlist_title": "Σκοτάδι ",
+      "track_title": "San Star Tou Cinema",
+      "track_artist": "Nikos Ziogalas",
+      "datetime": "2026-10-27 12:08:43",
+      "timestamp": 1793095723.6058593
     }
   ]
 }

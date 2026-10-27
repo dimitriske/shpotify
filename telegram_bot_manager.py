@@ -111,10 +111,21 @@ class TelegramBotManager:
                     if "message" in update:
                         msg = update["message"]
                         cid = str(msg.get("chat", {}).get("id", ""))
-                        text = msg.get("text", "").strip()
+                        raw_text = msg.get("text", "").strip()
+                        text_lower = raw_text.lower()
 
-                        if text in ["/start", "/menu", "menu", "μενού", "λίστες"]:
+                        # Matches: menu, Menu, MENU, μενού, ΜΕΝΟΥ, /menu, /start, etc.
+                        is_menu = (
+                            text_lower in ["/start", "/menu", "menu", "μενού", "μενου", "λίστες", "λιστες", "start", "help", "βοήθεια"]
+                            or "menu" in text_lower
+                            or "μενού" in text_lower
+                            or "μενου" in text_lower
+                            or text_lower.startswith("/")
+                            or bool(text_lower)
+                        )
+                        if is_menu:
                             self.send_menu(cid)
+
 
                     elif "callback_query" in update:
                         cq = update["callback_query"]
